@@ -117,3 +117,6 @@ dist
 
 # Editors
 .idea
+
+# Typescript build output folder
+.build
