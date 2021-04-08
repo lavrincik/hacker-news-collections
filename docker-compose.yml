@@ -1,0 +1,49 @@
+# run `docker-compose up` to start both containers, ctrl+c to stop them
+# run `docker-compose down -v` to remove containers and docker volumes
+
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: sl-postgres
+    environment:
+      POSTGRES_USER: hacker_news_stories
+      POSTGRES_DB: hacker_news_stories
+      POSTGRES_PASSWORD: hacker_news_stories
+    volumes:
+      - sl-postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+    container_name: sl-elastic
+    volumes:
+      - sl-elastic:/usr/share/elasticsearch/data
+    environment:
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.10.2
+    container_name: sl-kibana
+    ports: 
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_HOSTS: http://sl-elastic:9200
+    networks:
+      - elastic
+
+volumes:
+  sl-elastic:
+    driver: local
+  sl-postgres:
+    driver: local
+
+networks: 
+  elastic:

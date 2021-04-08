@@ -1,0 +1,11 @@
+{
+    "extension": ["ts"],
+    "async-only": true,
+    "recursive": true,
+    "require": [
+      "ts-node/register", 
+      "test/unit/hooks.ts",
+      "test/unit/fixtures.ts"
+    ],
+    "timeout": 10000
+}
